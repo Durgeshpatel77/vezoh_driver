@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../theme/app_theme.dart';
-import 'driver_dashboard_screen.dart';
+import '../home_screens/driver_dashboard_screen.dart';
 class VehicleRegistrationScreen extends StatelessWidget {
   final List<String> selectedServices;
 

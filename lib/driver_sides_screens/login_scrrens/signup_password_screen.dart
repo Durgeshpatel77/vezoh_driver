@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:vezoh_driver/driver_sides_screens/login_scrrens/welcome_screen.dart';
+import 'package:vezoh_driver/driver_sides_screens/verification_screens/welcome_screen.dart';
 import '../../contoller/driver_sides_controllers/driver_detail_controller.dart';
 import '../../theme/app_theme.dart';
-import 'driver_dashboard_screen.dart';
+import '../home_screens/driver_dashboard_screen.dart';
 
 class SignupPasswordScreen extends StatefulWidget {
   const SignupPasswordScreen({super.key});

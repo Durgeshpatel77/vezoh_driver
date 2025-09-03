@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:vezoh_driver/driver_sides_screens/login_scrrens/vehicle_registration_screen.dart';
+import 'package:vezoh_driver/driver_sides_screens/verification_screens/vehicle_registration_screen.dart';
 
 import '../../theme/app_theme.dart';
 
