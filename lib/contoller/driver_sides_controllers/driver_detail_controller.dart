@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
-class SignupDriverController extends GetxController {
+class DriverDetailController extends GetxController {
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
   final phoneController = TextEditingController();
-  final codeController = TextEditingController();
-  final codeFocusNode = FocusNode();
+
+  final codeController = TextEditingController(); // Only needed for other flows
+  final codeFocusNode = FocusNode();              // Only needed for other flows
   final scrollController = ScrollController();
 
-  // Observables
+  // Observables (for other flows like code verification)
   var code = ''.obs;
 
   // Validation logic for the code
@@ -16,6 +18,8 @@ class SignupDriverController extends GetxController {
 
   @override
   void onClose() {
+    nameController.dispose();
+    emailController.dispose();
     phoneController.dispose();
     codeController.dispose();
     codeFocusNode.dispose();

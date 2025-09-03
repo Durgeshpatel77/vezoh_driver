@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "437801434751",
+    "project_id": "vizohdriverside",
+    "storage_bucket": "vizohdriverside.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:437801434751:android:bde842e65b487be005494a",
+        "android_client_info": {
+          "package_name": "com.multivortex.vizohdriver"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmaaPGUqHfNAz0GYizh3g6h7oJH2w6_wE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

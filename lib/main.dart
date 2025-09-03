@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:vezoh_driver/slider_screens/splash_screen.dart';
 
-import 'driver_sides_screens/login_scrrens/signup_driver_screen.dart';
+import 'driver_sides_screens/login_scrrens/driver_detail_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
 
       ),
-      home: SignupDriverScreen(),
+      home: SplashScreen(),
     );
   }
 }
