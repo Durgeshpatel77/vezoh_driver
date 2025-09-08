@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../theme/app_theme.dart';
+import '../../../theme/app_theme.dart';
 
 class EarningsScreen extends StatelessWidget {
   const EarningsScreen({super.key});

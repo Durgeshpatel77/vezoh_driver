@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:vezoh_driver/screens/driver_sides_screens/order_screens/tripin_progress_screen.dart';
 
-import '../../theme/app_theme.dart';
+import '../../../theme/app_theme.dart';
 
-class DrivetoPickupCourierScreen extends StatelessWidget {
-  const DrivetoPickupCourierScreen({super.key});
 
+class DrivetoPickuprideScreen extends StatefulWidget {
+  const DrivetoPickuprideScreen({super.key});
+
+  @override
+  State<DrivetoPickuprideScreen> createState() =>
+      _DrivetoPickuprideScreenState();
+}
+
+class _DrivetoPickuprideScreenState extends State<DrivetoPickuprideScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +63,7 @@ class DrivetoPickupCourierScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    'HSR Layout',
+                    'Koramangala 5th Block ',
                     style: TextStyle(fontSize: 14, color: AppColors.gray),
                     textAlign: TextAlign.center,
                   ),
@@ -98,7 +106,7 @@ class DrivetoPickupCourierScreen extends StatelessWidget {
                         backgroundColor: AppColors.skyBlue,
                         radius: 22,
                         child: Text(
-                          'MS',
+                          'JD',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -108,7 +116,7 @@ class DrivetoPickupCourierScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Maruti Suzuki Wagon R Geeta',
+                              'John Doe',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text('+91 98765 43210'),
@@ -127,14 +135,14 @@ class DrivetoPickupCourierScreen extends StatelessWidget {
                           icon: const Icon(Icons.call),
                         ),
                       ),
-                      SizedBox(width: 5,),
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(width: 0.3,color: AppColors.gray),
-                        ),
+              SizedBox(width: 5,),
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(width: 0.3,color: AppColors.gray),
+                ),
                         child: IconButton(
                           onPressed: () {},
                           icon: const Icon(Icons.chat_bubble_outline),
@@ -177,7 +185,7 @@ class DrivetoPickupCourierScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  Get.back(); // 👈 Use GetX to go back
+                  Get.to(TripinProgressScreen()); // 👈 Use GetX to go back
                 },
                 child: const Text(
                   'Package collected',

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../contoller/driver_sides_controllers/driver_detail_controller.dart';
-import '../../theme/app_theme.dart';
+import '../../../contoller/driver_sides_controllers/driver_detail_controller.dart';
+import '../../../theme/app_theme.dart';
 import 'driver_otp_screen.dart';
 
 class DriverDetailScreen extends StatefulWidget {

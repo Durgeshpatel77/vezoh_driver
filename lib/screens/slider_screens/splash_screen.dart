@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vezoh_driver/driver_sides_screens/verification_screens/welcome_screen.dart';
+import '../../theme/app_theme.dart';
 import '../driver_sides_screens/login_scrrens/driver_detail_screen.dart';
 import '../driver_sides_screens/home_screens/driver_dashboard_screen.dart';
-import '../theme/app_theme.dart';
+import '../driver_sides_screens/verification_screens/welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

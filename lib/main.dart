@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:vezoh_driver/slider_screens/splash_screen.dart';
-
-import 'driver_sides_screens/login_scrrens/driver_detail_screen.dart';
+import 'package:vezoh_driver/screens/slider_screens/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../contoller/driver_sides_controllers/driver_login_controller.dart';
-import '../../theme/app_theme.dart';
+import '../../../contoller/driver_sides_controllers/driver_login_controller.dart';
+import '../../../theme/app_theme.dart';
 import '../home_screens/driver_dashboard_screen.dart';
 import '../verification_screens/welcome_screen.dart';
 

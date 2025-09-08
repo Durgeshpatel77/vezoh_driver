@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:vezoh_driver/driver_sides_screens/order_screens/tripin_progress_screen.dart';
 
-import '../../theme/app_theme.dart';
+import '../../../theme/app_theme.dart';
 
-class DrivetoPickuprideScreen extends StatefulWidget {
-  const DrivetoPickuprideScreen({super.key});
+class DrivetoPickupCourierScreen extends StatelessWidget {
+  const DrivetoPickupCourierScreen({super.key});
 
-  @override
-  State<DrivetoPickuprideScreen> createState() =>
-      _DrivetoPickuprideScreenState();
-}
-
-class _DrivetoPickuprideScreenState extends State<DrivetoPickuprideScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +55,7 @@ class _DrivetoPickuprideScreenState extends State<DrivetoPickuprideScreen> {
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    'Koramangala 5th Block ',
+                    'HSR Layout',
                     style: TextStyle(fontSize: 14, color: AppColors.gray),
                     textAlign: TextAlign.center,
                   ),
@@ -105,7 +98,7 @@ class _DrivetoPickuprideScreenState extends State<DrivetoPickuprideScreen> {
                         backgroundColor: AppColors.skyBlue,
                         radius: 22,
                         child: Text(
-                          'JD',
+                          'MS',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -115,7 +108,7 @@ class _DrivetoPickuprideScreenState extends State<DrivetoPickuprideScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'John Doe',
+                              'Maruti Suzuki Wagon R Geeta',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text('+91 98765 43210'),
@@ -134,14 +127,14 @@ class _DrivetoPickuprideScreenState extends State<DrivetoPickuprideScreen> {
                           icon: const Icon(Icons.call),
                         ),
                       ),
-              SizedBox(width: 5,),
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(width: 0.3,color: AppColors.gray),
-                ),
+                      SizedBox(width: 5,),
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(width: 0.3,color: AppColors.gray),
+                        ),
                         child: IconButton(
                           onPressed: () {},
                           icon: const Icon(Icons.chat_bubble_outline),
@@ -184,7 +177,7 @@ class _DrivetoPickuprideScreenState extends State<DrivetoPickuprideScreen> {
                   ),
                 ),
                 onPressed: () {
-                  Get.to(TripinProgressScreen()); // 👈 Use GetX to go back
+                  Get.back(); // 👈 Use GetX to go back
                 },
                 child: const Text(
                   'Package collected',
