@@ -3,12 +3,11 @@ class ApiConstants {
 
   // Authentication endpoints
   static const String registerDriver = "$baseUrl/auth/register/driver";
-  static const String verifyEmailOtp = "$baseUrl/auth/verify-email-otp";
+  static const String verifyRegistrationOtp = "$baseUrl/auth/driver/verify-email-otp";
+  static const String verifyLoginOtp = "$baseUrl/auth/verify-email-otp"; // if needed separately
+  static const String loginDriver = "$baseUrl/auth/login/driver";
+  static const String loginDriverOtp = "$baseUrl/auth/driver/request-login-otp"; // ensure this is correct
 
   // Driver endpoints
-  static const String optServices = "$baseUrl/driver/opt-services";
-  static const String vehicleRegistration = "$baseUrl/driver/vehicle-registration";
-  static const String profile = "$baseUrl/driver/profile";
-
-// Add more endpoints as needed
+  static const String profile = "https://vizoh-app.onrender.com/api/driver/selected-services";
 }

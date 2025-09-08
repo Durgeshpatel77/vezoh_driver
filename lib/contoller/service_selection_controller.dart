@@ -58,7 +58,7 @@ class ServiceController extends GetxController {
     }
 
     try {
-      final url = Uri.parse(ApiConstants.optServices);
+      final url = Uri.parse(ApiConstants.profile);
       final body = jsonEncode({'services': selected});
 
       print("🔵 URL: $url");

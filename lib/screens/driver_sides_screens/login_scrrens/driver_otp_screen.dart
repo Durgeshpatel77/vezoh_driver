@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../contoller/driver_sides_controllers/driver_login_controller.dart';
 import '../../../theme/app_theme.dart';
-import '../home_screens/driver_dashboard_screen.dart';
 import '../verification_screens/welcome_screen.dart';
 
 class DriverOtpScreen extends StatefulWidget {
   final String email;
+  final String otpType; // "login" or "registration"
 
-  const DriverOtpScreen({super.key, required this.email});
+  const DriverOtpScreen({
+    super.key,
+    required this.email,
+    this.otpType = "login",
+  });
 
   @override
   State<DriverOtpScreen> createState() => _DriverOtpScreenState();
@@ -17,6 +21,12 @@ class DriverOtpScreen extends StatefulWidget {
 class _DriverOtpScreenState extends State<DriverOtpScreen> {
   final otpController = TextEditingController();
   final driverLoginController = Get.put(DriverLoginController());
+
+  @override
+  void dispose() {
+    otpController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -138,9 +148,10 @@ class _DriverOtpScreenState extends State<DriverOtpScreen> {
                       return;
                     }
 
-                    final success = await driverLoginController.verifyDriverOtp(
+                    final success = await driverLoginController.verifyOtp(
                       email: widget.email,
                       otp: otp,
+                      type: widget.otpType, // pass the type parameter here
                     );
 
                     if (success) {
