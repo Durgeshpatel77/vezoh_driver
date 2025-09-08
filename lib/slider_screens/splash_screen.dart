@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vezoh_driver/driver_sides_screens/verification_screens/welcome_screen.dart';
 import '../driver_sides_screens/login_scrrens/driver_detail_screen.dart';
+import '../driver_sides_screens/home_screens/driver_dashboard_screen.dart';
 import '../theme/app_theme.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -25,7 +27,6 @@ class _SplashScreenState extends State<SplashScreen> {
       subtitle: "No commissions just connections\n and 100% is yours",
       icon: Icons.location_on,
     ),
-    // Index 2 will be skipped
     _IntroSlide(
       title: "Secure Payments",
       subtitle: "Fast and protected payment\nmethods built-in",
@@ -54,6 +55,25 @@ class _SplashScreenState extends State<SplashScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isLoggedIn = prefs.getBool("is_driver_logged_in") ?? false;
+
+    if (isLoggedIn) {
+      // User already logged in → go to dashboard
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+      );
+    }
+  }
+
+  @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
@@ -65,14 +85,11 @@ class _SplashScreenState extends State<SplashScreen> {
     return SingleChildScrollView(
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            minHeight: 800, // optional minimum height
-          ),
+          constraints: const BoxConstraints(minHeight: 800),
           child: IntrinsicHeight(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                /// Logo Box
                 Container(
                   height: 120,
                   width: 120,
@@ -92,10 +109,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 16),
-
-                /// App Name
                 Text(
                   'vezoH',
                   style: TextStyle(
@@ -104,22 +118,13 @@ class _SplashScreenState extends State<SplashScreen> {
                     color: AppColors.white,
                   ),
                 ),
-
                 const SizedBox(height: 10),
-
-                /// Subtitle
                 Text(
                   'Your trusted transport and\ndelivery partner',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: AppColors.white,
-                  ),
+                  style: TextStyle(fontSize: 14, color: AppColors.white),
                 ),
-
                 const SizedBox(height: 40),
-
-                /// Show card only from index 1 (skip 0 and 2)
                 if (index > 0 && index != 2)
                   Container(
                     width: 250,
@@ -130,11 +135,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     ),
                     child: Column(
                       children: [
-                        Icon(
-                          slide.icon,
-                          color: Colors.white,
-                          size: 48,
-                        ),
+                        Icon(slide.icon, color: Colors.white, size: 48),
                         const SizedBox(height: 12),
                         Text(
                           slide.title,
@@ -157,10 +158,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       ],
                     ),
                   ),
-
                 const SizedBox(height: 50),
-
-                /// Dot Indicators
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(slides.length, (dotIndex) {
@@ -188,7 +186,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void handlePageChange(int index) {
     if (index == 2) {
-      // Navigate to GetStartedScreen instead of showing index 2
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const DriverDetailScreen()),
@@ -208,10 +205,7 @@ class _SplashScreenState extends State<SplashScreen> {
           itemCount: slides.length,
           onPageChanged: handlePageChange,
           itemBuilder: (context, index) {
-            if (index == 2) {
-              // Don’t show slide at index 2, but trigger redirect
-              return const SizedBox.shrink();
-            }
+            if (index == 2) return const SizedBox.shrink();
             return buildSlide(slides[index]);
           },
         ),
@@ -224,7 +218,6 @@ class _IntroSlide {
   final String title;
   final String subtitle;
   final IconData icon;
-
   const _IntroSlide({
     required this.title,
     required this.subtitle,
