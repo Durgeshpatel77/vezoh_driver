@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../model/service_selection_model.dart';
+import '../screens/driver_sides_screens/verification_screens/vehicle_registration_screen.dart';
 import 'api_constants.dart';
 
 class ServiceController extends GetxController {
@@ -37,36 +39,45 @@ class ServiceController extends GetxController {
     ];
   }
 
+  /// Correct toggle: only update the specific service
   void toggleService(String id) {
-    services.value = services.map((service) {
-      if (service.id == id) {
-        return service.copyWith(isSelected: !service.isSelected);
-      }
-      return service;
-    }).toList();
+    final index = services.indexWhere((s) => s.id == id);
+    if (index != -1) {
+      services[index] = services[index].copyWith(
+        isSelected: !services[index].isSelected,
+      );
+    }
   }
 
   Future<void> submitServices() async {
     isLoading.value = true;
 
-    final selected = services.where((s) => s.isSelected).map((s) => s.id).toList();
+    // Get the list of selected services (full objects)
+    final selectedServices = services.where((s) => s.isSelected).toList();
 
-    if (selected.isEmpty) {
+    if (selectedServices.isEmpty) {
       Get.snackbar("Error", "Please select at least one service");
       isLoading.value = false;
       return;
     }
 
     try {
-      final url = Uri.parse(ApiConstants.profile);
-      final body = jsonEncode({'services': selected});
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString("auth_token") ?? "";
+
+      final url = Uri.parse("https://vizoh-app.onrender.com/api/driver/opt-services");
+      final body = jsonEncode({'services': selectedServices.map((s) => s.id).toList()});
 
       print("🔵 URL: $url");
       print("🔵 Body: $body");
+      print("🔑 Token: $token");
 
       final response = await http.post(
         url,
-        headers: {'Content-Type': 'application/json'}, // No token here
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
         body: body,
       );
 
@@ -76,9 +87,15 @@ class ServiceController extends GetxController {
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 200 && data['success'] == true) {
-        Get.snackbar("Success", "Services updated successfully");
+        Get.snackbar("Success", data['message'] ?? "Services registered successfully");
+
+        // ✅ Corrected navigation with list of service IDs
+        Get.off(() => VehicleRegistrationScreen(
+            selectedServices: selectedServices.map((s) => s.id).toList()
+        ));
+
       } else {
-        Get.snackbar("Error", data['message'] ?? "Failed to update services");
+        Get.snackbar("Error", data['message'] ?? "Failed to register services");
       }
     } catch (e) {
       print("🔥 Exception: $e");
