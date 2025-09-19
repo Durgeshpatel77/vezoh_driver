@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../theme/app_theme.dart';
+import '../driver_sides_screens/home_screens/under_rieview_screen.dart';
 import '../driver_sides_screens/login_scrrens/driver_detail_screen.dart';
 import '../driver_sides_screens/home_screens/driver_dashboard_screen.dart';
 import '../driver_sides_screens/verification_screens/welcome_screen.dart';
@@ -59,17 +63,48 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     _checkLoginStatus();
   }
+  Future<String?> _getServiceStatus(String authToken) async {
+    try {
+      final url = Uri.parse("https://vizoh-app.onrender.com/api/driver/selected-services");
+      final response = await http.get(url, headers: {
+        "Authorization": "Bearer $authToken",
+      });
 
-  Future<void> _checkLoginStatus() async {
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['data']?['serviceStatus']; // "pending", "approved", etc.
+      }
+    } catch (e) {
+      debugPrint("Error fetching service status: $e");
+    }
+    return null; // fallback
+  }
+
+  Future<void> _checkLoginStatus() async  {
     final prefs = await SharedPreferences.getInstance();
     final isLoggedIn = prefs.getBool("is_driver_logged_in") ?? false;
+    final authToken = prefs.getString("auth_token");
 
-    if (isLoggedIn) {
-      // User already logged in → go to dashboard
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const WelcomeScreen()),
-      );
+    if (isLoggedIn && authToken != null) {
+      // 🔹 Call selected-services API to check service status
+      final status = await _getServiceStatus(authToken);
+
+      if (status == "pending") {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const UnderReviewScreen()),
+        );
+      } else if (status == "approved") {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const VerificationSubmittedScreen()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const VerificationSubmittedScreen()),
+        );
+      }
     }
   }
 

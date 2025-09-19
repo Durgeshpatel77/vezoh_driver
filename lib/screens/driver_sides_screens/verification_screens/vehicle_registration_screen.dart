@@ -10,7 +10,7 @@ class VehicleRegistrationScreen extends StatelessWidget {
 
   final TextEditingController vehicleNumberController = TextEditingController();
   final TextEditingController ownerNameController = TextEditingController();
-  final RxString selectedVehicleType = 'Auto Rickshaw'.obs;
+  final RxString selectedVehicleType = 'Auto'.obs;
 
   VehicleRegistrationScreen({super.key, required this.selectedServices});
 
@@ -31,7 +31,7 @@ class VehicleRegistrationScreen extends StatelessWidget {
         child: Column(
           children: [
             _inputCard('Vehicle details', [
-              _dropdownField('Vehicle type', ['Auto Rickshaw', 'Bike', 'Car']),
+              _dropdownField('Vehicle type', ['Bike', 'Auto', 'Car', 'Truck', 'Van']),
               const SizedBox(height: 12),
               _textFieldInput('Vehicle number', vehicleNumberController, 'JH098212'),
               _textFieldInput('Owner name', ownerNameController, 'Akshay Kumar'),
@@ -57,28 +57,42 @@ class VehicleRegistrationScreen extends StatelessWidget {
               _uploadTile('Upload vehicle insurance', controller.vehicleInsurance),
             ]),
             const SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () async {
-                  // Call controller submitVehicle
-                  await controller.submitVehicle(
-                    vehicleType: selectedVehicleType.value,
-                    vehicleNumber: vehicleNumberController.text.trim(),
-                    ownerName: ownerNameController.text.trim(),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.skyBlue,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+            Obx(() {
+              return SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: controller.isLoading.value
+                      ? null
+                      : () async {
+                    await controller.submitVehicle(
+                      vehicleType: selectedVehicleType.value,
+                      vehicleNumber: vehicleNumberController.text.trim(),
+                      ownerName: ownerNameController.text.trim(),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.skyBlue,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: controller.isLoading.value
+                      ? const SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
+                      : Text(
+                    'Submit for verification',
+                    style: TextStyle(color: AppColors.white, fontSize: 16),
                   ),
                 ),
-                child: Text('Submit for verification',
-                    style: TextStyle(color: AppColors.white, fontSize: 16)),
-              ),
-            ),
+              );
+            }),
           ],
         ),
       ),
