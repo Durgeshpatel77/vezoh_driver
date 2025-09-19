@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../theme/app_theme.dart';
+
 import '../../screens/driver_sides_screens/home_screens/driver_dashboard_screen.dart';
 
 class VehicleRegistrationController extends GetxController {
@@ -15,7 +15,6 @@ class VehicleRegistrationController extends GetxController {
   var rcCertificate = Rx<XFile?>(null);
   var vehicleInsurance = Rx<XFile?>(null);
 
-  // Pick document with permission check
   Future<void> pickDocument(String title) async {
     bool granted = await _checkPermissions();
     if (granted) {
@@ -91,7 +90,6 @@ class VehicleRegistrationController extends GetxController {
     }
   }
 
-  // Submit vehicle details
   Future<void> submitVehicle({
     required String vehicleType,
     required String vehicleNumber,
@@ -106,17 +104,28 @@ class VehicleRegistrationController extends GetxController {
 
     try {
       final prefs = await SharedPreferences.getInstance();
-      final driverId = prefs.getString("driverId");
+      final authToken = prefs.getString("auth_token"); // fetch token
+      final driverId = prefs.getString("driver_id"); // ✅ correct key
+
       if (driverId == null) {
-        Get.snackbar("Error", "Driver ID not found");
+        Get.snackbar("Error", "Driver ID not found in SharedPreferences");
+        print("Driver ID is null. SharedPreferences keys: ${prefs.getKeys()}");
         return;
       }
+
+      print("Submitting vehicle...");
+      print("Driver ID: $driverId");
+      print("Auth Token: $authToken");
+      print("Vehicle Type: $vehicleType");
+      print("Vehicle Number: $vehicleNumber");
+      print("Owner Name: $ownerName");
 
       var request = http.MultipartRequest(
         'POST',
         Uri.parse("https://vizoh-app.onrender.com/api/driver/register-vehicle"),
       );
 
+      request.headers['Authorization'] = 'Bearer $authToken'; // include token
       request.fields['driverId'] = driverId;
       request.fields['vehicleType'] = vehicleType;
       request.fields['vehicleNumber'] = vehicleNumber;
@@ -132,8 +141,16 @@ class VehicleRegistrationController extends GetxController {
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
 
+      print("===== Vehicle Registration Response =====");
+      print("Status Code: ${response.statusCode}");
+      print("Headers: ${response.headers}");
+      print("Body: ${response.body}");
+      print("========================================");
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        if (data['driverId'] != null) print("Driver ID (from response): ${data['driverId']}");
+        if (data['vehicleId'] != null) print("Vehicle ID: ${data['vehicleId']}");
         if (data['success'] == true) {
           Get.snackbar("Success", data['message']);
           Get.to(() => const VerificationSubmittedScreen());
@@ -145,7 +162,9 @@ class VehicleRegistrationController extends GetxController {
             "Error", "Failed to submit. Status code: ${response.statusCode}");
       }
     } catch (e) {
+      print("Exception occurred: $e");
       Get.snackbar("Error", e.toString());
     }
   }
+
 }
