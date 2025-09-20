@@ -6,8 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../theme/app_theme.dart';
 import '../home_screens/driver_dashboard_screen.dart';
+import '../home_screens/earning_screens.dart';
 import '../home_screens/under_rieview_screen.dart';
-import '../verification_screens/welcome_screen.dart';
 import 'driver_detail_screen.dart';
 
 class SignInOtpVerificationScreen extends StatefulWidget {
@@ -64,7 +64,6 @@ class _SignInOtpVerificationScreenState
       isLoading.value = false;
 
       if (response.statusCode == 200 && data["success"] == true) {
-        /// Extract token + id
         final token = data["data"]["token"];
         final userId = data["data"]["id"];
         final email = widget.email;
@@ -74,7 +73,6 @@ class _SignInOtpVerificationScreenState
         debugPrint("📧 Email: $email");
         debugPrint("🔑 Token: $token");
 
-        /// Save to SharedPreferences
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString("auth_token", token);
         await prefs.setString("user_id", userId);
@@ -83,7 +81,7 @@ class _SignInOtpVerificationScreenState
 
         debugPrint("💾 Data saved to SharedPreferences");
 
-        /// ✅ Fetch driver verification & service status
+        // Fetch driver verification & service status
         final verificationResponse = await http.get(
           Uri.parse(
               "https://vizoh-app.onrender.com/api/driver/selected-services"),
@@ -92,15 +90,16 @@ class _SignInOtpVerificationScreenState
 
         if (verificationResponse.statusCode == 200) {
           final verificationData = jsonDecode(verificationResponse.body);
-          final verificationStatus =
-              verificationData['data']?['verificationStatus'] ?? "";
-          final serviceStatus =
-              verificationData['data']?['serviceStatus'] ?? "";
+          debugPrint("🔹 Raw Verification Data: $verificationData");
+
+          final data = verificationData['data'] ?? {};
+          final verificationStatus = data['verificationStatus'] ?? "unknown";
+          final serviceStatus = data['serviceStatus'] ?? "unknown";
 
           debugPrint("🔍 Verification Status: $verificationStatus");
           debugPrint("🔍 Service Status: $serviceStatus");
 
-          /// Navigate based on status
+          // Navigate based on status
           if (verificationStatus == "pending" || serviceStatus == "pending") {
             Get.offAll(() => const UnderReviewScreen());
           } else if (verificationStatus == "approved" &&
@@ -108,11 +107,11 @@ class _SignInOtpVerificationScreenState
             Get.offAll(() => const VerificationSubmittedScreen());
           } else {
             // fallback
-            Get.offAll(() => const WelcomeScreen());
+            Get.offAll(() => const UnderReviewScreen());
           }
         } else {
           // If fetching verification status fails
-          Get.offAll(() => const UnderReviewScreen());
+          Get.offAll(() => const EarningsScreen());
           Get.snackbar(
             "Warning",
             "Could not fetch verification status. Please try again later.",
