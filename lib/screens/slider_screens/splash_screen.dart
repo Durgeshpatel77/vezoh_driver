@@ -63,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     _checkLoginStatus();
   }
-  Future<String?> _getServiceStatus(String authToken) async {
+  Future<String?> _getVerificationStatus(String authToken) async {
     try {
       final url = Uri.parse("https://vizoh-app.onrender.com/api/driver/selected-services");
       final response = await http.get(url, headers: {
@@ -71,42 +71,64 @@ class _SplashScreenState extends State<SplashScreen> {
       });
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        return data['data']?['serviceStatus']; // "pending", "approved", etc.
+        final decoded = jsonDecode(response.body);
+
+        debugPrint("📦 Full API Response: $decoded");
+
+        final verificationStatus =
+            decoded['data']?['verificationStatus']?.toString() ?? "pending"; // 👈 fallback
+        final serviceStatus =
+            decoded['data']?['serviceStatus']?.toString() ?? "pending"; // 👈 fallback
+
+        debugPrint("✅ Raw API verificationStatus: $verificationStatus");
+        debugPrint("✅ Raw API serviceStatus: $serviceStatus");
+
+        return "$verificationStatus|$serviceStatus";
+      } else {
+        debugPrint("❌ API Error: ${response.statusCode} → ${response.body}");
       }
     } catch (e) {
-      debugPrint("Error fetching service status: $e");
+      debugPrint("❌ Exception fetching service status: $e");
     }
-    return null; // fallback
+    return null;
   }
 
-  Future<void> _checkLoginStatus() async  {
+  Future<void> _checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();
     final isLoggedIn = prefs.getBool("is_driver_logged_in") ?? false;
     final authToken = prefs.getString("auth_token");
 
     if (isLoggedIn && authToken != null) {
-      // 🔹 Call selected-services API to check service status
-      final status = await _getServiceStatus(authToken);
+      final status = await _getVerificationStatus(authToken);
 
-      if (status == "pending") {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const UnderReviewScreen()),
-        );
-      } else if (status == "approved") {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const VerificationSubmittedScreen()),
-        );
-      } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const VerificationSubmittedScreen()),
-        );
+      if (status != null) {
+        final parts = status.split("|");
+        final verificationStatus = parts[0];
+        final serviceStatus = parts[1];
+
+        debugPrint("🔎 Verification Status: $verificationStatus");
+        debugPrint("🔎 Service Status: $serviceStatus");
+
+        if (verificationStatus == "pending" || serviceStatus == "pending") {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const UnderReviewScreen()),
+          );
+        } else if (verificationStatus == "approved" && serviceStatus == "active") {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const VerificationSubmittedScreen()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+          );
+        }
       }
     }
   }
+
 
   @override
   void dispose() {

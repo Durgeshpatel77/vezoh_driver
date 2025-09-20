@@ -53,7 +53,7 @@ class _UnderReviewScreenState extends State<UnderReviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  Text("Verification",style: TextStyle(color: AppColors.white),),
+        title: Text("Verification", style: TextStyle(color: AppColors.white)),
         backgroundColor: AppColors.skyBlue,
         automaticallyImplyLeading: false,
       ),
@@ -62,7 +62,7 @@ class _UnderReviewScreenState extends State<UnderReviewScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top card
+            // Top card (status)
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -73,26 +73,41 @@ class _UnderReviewScreenState extends State<UnderReviewScreen> {
               ),
               child: Column(
                 children: [
-                  const Icon(Icons.access_time, size: 50, color: Colors.orange),
+                  Icon(
+                    verificationStatus == "approved"
+                        ? Icons.verified
+                        : Icons.access_time,
+                    size: 50,
+                    color: verificationStatus == "approved"
+                        ? Colors.green
+                        : Colors.orange,
+                  ),
                   const SizedBox(height: 10),
-                  const Text(
-                    "Under review",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  Text(
+                    verificationStatus == "approved"
+                        ? "Approved"
+                        : "Under Review",
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 5),
-                  const Text(
-                    "Your documents are being verified",
-                    style: TextStyle(color: Colors.grey),
+                  Text(
+                    verificationStatus == "approved"
+                        ? "Your documents are approved"
+                        : "Your documents are being verified",
+                    style: const TextStyle(color: Colors.grey),
                   ),
                   const SizedBox(height: 10),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(20),
+                  if (verificationStatus != "approved")
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Text("Usually takes 24-48 hours"),
                     ),
-                    child: const Text("Usually takes 24-48 hours"),
-                  ),
                 ],
               ),
             ),
@@ -100,10 +115,8 @@ class _UnderReviewScreenState extends State<UnderReviewScreen> {
             const SizedBox(height: 20),
 
             // Selected Services
-            const Text(
-              "Selected Services",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
+            const Text("Selected Services",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
 
             ...services.map((service) => Card(
@@ -113,7 +126,9 @@ class _UnderReviewScreenState extends State<UnderReviewScreen> {
               ),
               child: ListTile(
                 leading: Icon(
-                  service.toLowerCase() == "ride" ? Icons.directions_car : Icons.local_shipping,
+                  service.toLowerCase() == "ride"
+                      ? Icons.directions_car
+                      : Icons.local_shipping,
                   color: Colors.blue,
                   size: 32,
                 ),
@@ -124,46 +139,26 @@ class _UnderReviewScreenState extends State<UnderReviewScreen> {
                       : "Package delivery",
                 ),
                 trailing: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: Colors.yellow.shade100,
+                    color: serviceStatus == "active"
+                        ? Colors.green.shade100
+                        : Colors.yellow.shade100,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
                     serviceStatus.capitalizeFirst ?? "Pending",
-                    style: const TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: serviceStatus == "active"
+                          ? Colors.green
+                          : Colors.orange,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
             )),
-
-            const SizedBox(height: 20),
-
-            // Need help section
-            const Text(
-              "Need help?",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-
-            Card(
-              child: ListTile(
-                leading: const Icon(Icons.call, color: Colors.black87),
-                title: const Text("Call support"),
-                onTap: () {
-                  // add call functionality here
-                },
-              ),
-            ),
-            Card(
-              child: ListTile(
-                leading: const Icon(Icons.chat, color: Colors.black87),
-                title: const Text("Chat with us"),
-                onTap: () {
-                  // add chat functionality here
-                },
-              ),
-            ),
           ],
         ),
       ),

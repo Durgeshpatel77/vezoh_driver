@@ -58,10 +58,12 @@ class VehicleRegistrationScreen extends StatelessWidget {
             ]),
             const SizedBox(height: 20),
             Obx(() {
+              final isLoading = controller.isLoading.value;
+
               return SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: controller.isLoading.value
+                  onPressed: isLoading
                       ? null
                       : () async {
                     await controller.submitVehicle(
@@ -72,12 +74,15 @@ class VehicleRegistrationScreen extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.skyBlue,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: EdgeInsets.symmetric(vertical: isLoading ? 12 : 16),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(isLoading ? 50 : 8), // 👈 circular when loading
                     ),
+                    minimumSize: isLoading
+                        ? const Size(50, 50) // 👈 small circular size
+                        : const Size(double.infinity, 50),
                   ),
-                  child: controller.isLoading.value
+                  child: isLoading
                       ? const SizedBox(
                     height: 24,
                     width: 24,
@@ -92,7 +97,7 @@ class VehicleRegistrationScreen extends StatelessWidget {
                   ),
                 ),
               );
-            }),
+            })
           ],
         ),
       ),
